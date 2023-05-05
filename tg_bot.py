@@ -3,6 +3,8 @@ import os
 import telegram
 from telegram.ext import Updater, CallbackContext, CommandHandler, MessageHandler, Filters
 from telegram import Update
+from open_quiz import get_rand_quiz
+import random
 
 
 def start(update: Update, context: CallbackContext):
@@ -16,7 +18,11 @@ def start(update: Update, context: CallbackContext):
 
 def handle_user_message(update: Update, context: CallbackContext):
     if update.message.text == 'Новый вопрос':
-        context.bot.send_message(chat_id=update.effective_chat.id, text='message')
+        questions = get_rand_quiz()
+        question_answer_pairs = list(questions.items())
+        question, answer = random.choice(question_answer_pairs)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=question)
+
     if update.message.text == 'Сдаться':
         pass
     if update.message.text == 'Мой счёт':
