@@ -13,7 +13,7 @@ def start(update: Update, context: CallbackContext):
                       ['Мой счёт']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     context.bot.send_message(chat_id=update.effective_chat.id,
-                     text="Привет, я бот для викторин!",
+                     text='Привет, я бот для викторин!',
                      reply_markup=reply_markup)
 
 
@@ -32,14 +32,14 @@ def handle_user_message(update: Update, context: CallbackContext):
     elif update.message.text == 'Мой счёт':
         pass
     else:
-        context.bot.send_message(chat_id=chat_id, text="Неправильный ответ, попробуйте еще раз")
+        context.bot.send_message(chat_id=chat_id, text='Неправильный ответ, попробуйте еще раз')
 
 
 if __name__ == '__main__':
     r = redis.Redis(host='localhost', port=6379, db=0)
 
     load_dotenv()
-    token = os.environ["BOT_TOKEN"]
+    token = os.environ['BOT_TOKEN']
     updater = Updater(token=token, use_context=True)
     dispatcher = updater.dispatcher
     start_handler = CommandHandler('start', start)
