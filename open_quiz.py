@@ -22,3 +22,9 @@ def get_rand_quiz():
                 questions[question_text] = answer_text
 
     return questions
+
+
+def check_user_answer(correct_answer, user_answer):
+    pure_answer = re.sub(r'\([^)]*\)|\.', '', correct_answer)
+    return pure_answer == user_answer
+
