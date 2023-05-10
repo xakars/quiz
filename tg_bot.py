@@ -30,7 +30,7 @@ def handle_new_question_request(update, context):
     question_answer_pairs = list(questions.items())
     question, answer = random.choice(question_answer_pairs)
     r.set(chat_id, answer)
-    print(r.get(chat_id).decode())
+    #print(r.get(chat_id).decode())
     context.bot.send_message(chat_id=update.effective_chat.id, text=question)
 
     return State.ANSWER
