@@ -6,6 +6,7 @@
 [telegram_bot](https://t.me/quiz_dvmnbot) и [vk_bot](https://vk.com/public219929952)
 
 Пример работы telegram бота:
+
 ![test](https://github.com/xakars/quiz/assets/73193926/4f79aca3-625b-45ec-a780-568d8b462b0b)
 
 
