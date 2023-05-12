@@ -1,16 +1,7 @@
-import os
-import random
 import re
-import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--path', default='quiz-questions', help='path to quizzes files')
-args = parser.parse_args()
-path_to_quizzes = args.path
-quizzes_file_names = os.listdir(path_to_quizzes)
-path_to_rand_quiz_file = os.path.join(path_to_quizzes, random.choice(quizzes_file_names))
 
-def get_rand_quiz():
+def get_rand_quiz(path_to_rand_quiz_file):
     questions = {}
     with open(path_to_rand_quiz_file, 'r', encoding='KOI8-R') as f:
         quiz = f.read()

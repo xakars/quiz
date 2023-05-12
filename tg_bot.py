@@ -7,6 +7,9 @@ from open_quiz import get_rand_quiz, check_user_answer
 import random
 import redis
 from enum import Enum
+import argparse
+import functools
+
 
 
 class State(Enum):
@@ -24,9 +27,9 @@ def start(update: Update, context: CallbackContext):
     return State.QUESTION
 
 
-def handle_new_question_request(update, context):
+def handle_new_question_request(update, context, path_to_quizzes):
     chat_id = update.effective_chat.id
-    questions = get_rand_quiz()
+    questions = get_rand_quiz(path_to_quizzes)
     question_answer_pairs = list(questions.items())
     question, answer = random.choice(question_answer_pairs)
     r.set(chat_id, answer)
@@ -57,6 +60,13 @@ def handle_give_up(update: Update, context: CallbackContext):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--path', default='quiz-questions', help='path to quizzes files')
+    args = parser.parse_args()
+    path_to_quizzes = args.path
+    quizzes_file_names = os.listdir(path_to_quizzes)
+    path_to_rand_quiz_file = os.path.join(path_to_quizzes, random.choice(quizzes_file_names))
+
     r = redis.Redis(host='localhost', port=6379, db=0)
 
     load_dotenv()
@@ -70,7 +80,7 @@ if __name__ == '__main__':
             ],
 
             states={
-                State.QUESTION: [MessageHandler(Filters.regex('^Новый вопрос$'), handle_new_question_request)],
+                State.QUESTION: [MessageHandler(Filters.regex('^Новый вопрос$'), functools.partial(handle_new_question_request, path_to_quizzes=path_to_rand_quiz_file))],
                 State.ANSWER:  [
                     MessageHandler(Filters.regex('^Сдаться$'), handle_give_up),
                     MessageHandler(Filters.text, handle_solution_attempt),
