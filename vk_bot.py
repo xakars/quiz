@@ -26,6 +26,8 @@ if __name__ == "__main__":
     quizzes_file_names = os.listdir(path_to_quizzes)
     path_to_rand_quiz_file = os.path.join(path_to_quizzes, random.choice(quizzes_file_names))
 
+    questions = get_rand_quiz(path_to_rand_quiz_file)
+
     r = redis.Redis(host='localhost', port=6379, db=0)
 
     load_dotenv()
@@ -44,7 +46,6 @@ if __name__ == "__main__":
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
             if event.text == 'Новый вопрос':
-                questions = get_rand_quiz(path_to_rand_quiz_file)
                 question_answer_pairs = list(questions.items())
                 question, answer = random.choice(question_answer_pairs)
                 r.set(event.user_id, answer)
