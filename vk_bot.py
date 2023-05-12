@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from open_quiz import get_rand_quiz, check_user_answer
 import redis
+import argparse
 
 
 def replay(event, vk_api, keyboard, message):
@@ -18,6 +19,13 @@ def replay(event, vk_api, keyboard, message):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--path', default='quiz-questions', help='path to quizzes files')
+    args = parser.parse_args()
+    path_to_quizzes = args.path
+    quizzes_file_names = os.listdir(path_to_quizzes)
+    path_to_rand_quiz_file = os.path.join(path_to_quizzes, random.choice(quizzes_file_names))
+
     r = redis.Redis(host='localhost', port=6379, db=0)
 
     load_dotenv()
@@ -36,7 +44,7 @@ if __name__ == "__main__":
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
             if event.text == 'Новый вопрос':
-                questions = get_rand_quiz()
+                questions = get_rand_quiz(path_to_rand_quiz_file)
                 question_answer_pairs = list(questions.items())
                 question, answer = random.choice(question_answer_pairs)
                 r.set(event.user_id, answer)
